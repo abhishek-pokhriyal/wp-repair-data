@@ -111,4 +111,29 @@ class WPRD_Data {
 			)
 		);
 	}
+
+	public static function get_subscriptions( $start_date = '', $end_date = '' ) {
+		global $wpdb;
+
+		$start_date = empty( $start_date ) ? '0000-00-00 00:00:00' : $start_date;
+		$end_date   = empty( $end_date ) ? current_time( 'mysql', 'gmt' ) : $end_date;
+
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				'SELECT ID, post_parent, post_status, post_date_gmt
+				FROM    %1$s
+				WHERE   post_type = "%2$s"
+				  AND   post_date_gmt >= "%3$s"
+				  AND   post_date_gmt < "%4$s"
+				ORDER BY post_date_gmt',
+				$wpdb->posts,
+				'shop_subscription',
+				$start_date,
+				$end_date
+			),
+			ARRAY_A
+		);
+
+		return $results;
+	}
 }

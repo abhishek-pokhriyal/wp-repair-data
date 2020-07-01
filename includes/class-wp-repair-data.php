@@ -96,6 +96,10 @@ final class WP_Repair_Data {
 			return;
 		}
 
+		if ( ! current_user_can( 'administrator' ) ) {
+			return;
+		}
+
 		$months = array(
 			'jan' => array(
 				'start_date' => '2020-01-01 00:00:00',

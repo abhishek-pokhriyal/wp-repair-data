@@ -259,9 +259,15 @@ final class WP_Repair_Data {
 		<?php
 		die;
 	}
-
 	private static function calculate_discount( $order, $percent ) {
-		return wc_format_decimal( ( $percent / 100 ) * $order->get_subtotal() );
+		$discount = 0.00;
+
+		foreach ( $order->get_items() as $item ) {
+			$item_discount = $item->get_subtotal() * ($percent/100);
+			$discount     += round($item_discount, 2, PHP_ROUND_HALF_ODD);
+		}
+
+		return $discount;
 	}
 
 	private static function calculate_difference( $actual, $calculated ) {

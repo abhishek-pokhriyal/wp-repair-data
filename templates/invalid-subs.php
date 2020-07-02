@@ -63,6 +63,7 @@
 		$count = 0;
 		foreach ( $coupon_subscriptions as $subscription_data ) :
 			$subscription  = wc_get_order( $subscription_data['ID'] );
+			$customer_id   = $subscription->get_customer_id();
 			$status        = $subscription_data['post_status'];
 			$text_to_match = 'Correct discount given';
 			$actual        = $subscription->get_total_discount();
@@ -73,6 +74,7 @@
 				<td class="<?php echo $class; ?>">
 					<?php printf( '<a href="%s">%s</a>', get_edit_post_link( $subscription_data['ID'] ), $subscription_data['ID'] ); ?>
 				</td>
+				<td class="<?php echo $class; ?>"><?php echo $customer_id; ?></td>
 				<td class="<?php echo $class; ?>"><?php echo ( new WC_DateTime( $subscription->get_date_created() ) )->format( 'M d, Y @ h:i A' ); ?></td>
 				<td class="<?php echo $class; ?>"><?php echo wcs_get_subscription_statuses()[ $status ]; ?></td>
 				<td class="<?php echo $class; ?>"><?php echo $subscription->get_formatted_order_total(); ?></td>

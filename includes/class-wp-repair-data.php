@@ -137,9 +137,11 @@ final class WP_Repair_Data {
 			return;
 		}
 
+		$month = $_GET['mon'] ?? 'jan';
+
 		$subscriptions        = WPRD_Data::get_subscriptions( self::$months[ $month ]['start_date'], self::$months[ $month ]['end_date'] );
 		$coupon_subscriptions = array_filter( $subscriptions, 'wprd_has_coupon' );
-		include_once WPRD_ABSPATH . 'templates/invalid-renewals.php';
+		include_once WPRD_ABSPATH . 'templates/invalid-subs.php';
 		die;
 	}
 

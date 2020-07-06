@@ -179,6 +179,28 @@ final class WP_Repair_Data {
 		$diff = $actual - $calculated;
 
 		if ( $diff < 0 ) {
+			if ( (-1 * $diff) < $precision ) {
+				return sprintf( '<strong>Correct discount given</strong>' );
+			} else {
+				return sprintf( '<strong>Discount missing: $%s</strong>', wc_format_decimal( $diff * -1 ) );
+			}
+		} elseif ( $diff > 0 ) {
+			if ( $diff < $precision ) {
+				return sprintf( '<strong>Correct discount given</strong>' );
+			} else {
+				return sprintf( '<strong>Charged less: <strong>$%s</strong>', wc_format_decimal( $diff ) );
+			}
+		} else {
+			return sprintf( '<strong>Correct discount given</strong>' );
+		}
+	}
+
+	private static function calculate_difference_renewal( $actual, $calculated ) {
+		$precision = 0.05;
+
+		$diff = $actual - $calculated;
+
+		if ( $diff < 0 ) {
 			if ( ( -1 * $diff) < $precision ) {
 				return 0;
 			} else {

@@ -80,7 +80,7 @@
 				$status  = $order->get_status();
 				$actual  = $order->get_total_discount(); 
 				$calc    = self::calculate_discount( $order, 5 );
-				$diff    = self::calculate_difference( $actual, $calc );
+				$diff    = self::calculate_difference_renewal( $actual, $calc );
 
 				if ( $diff >= 0 || in_array( $status, array( 'failed', 'cancelled' ) ) ) {
 					continue;

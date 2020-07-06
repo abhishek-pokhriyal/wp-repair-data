@@ -51,6 +51,7 @@
 	<thead>
 		<th>#</th>
 		<th>Subscription #</th>
+		<th>Customer ID</th>
 		<th>Date created UTC</th>
 		<th>Status</th>
 		<th>Total</th>

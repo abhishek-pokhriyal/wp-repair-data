@@ -158,9 +158,10 @@ final class WP_Repair_Data {
 
 		$subscriptions        = WPRD_Data::get_subscriptions( self::$months[ $month ]['start_date'], self::$months[ $month ]['end_date'] );
 		$coupon_subscriptions = array_filter( $subscriptions, 'wprd_has_coupon' );
-		include_once WPRD_ABSPATH . 'templates/invalid-renewals.php';
+		include_once WPRD_ABSPATH . 'templates/invalid-renewals-compact.php';
 		die;
 	}
+
 	private static function calculate_discount( $order, $percent ) {
 		$discount = 0.00;
 
@@ -178,19 +179,19 @@ final class WP_Repair_Data {
 		$diff = $actual - $calculated;
 
 		if ( $diff < 0 ) {
-			if ( (-1 * $diff) < $precision ) {
-				return sprintf( '<strong>Correct discount given</strong>' );
+			if ( ( -1 * $diff) < $precision ) {
+				return 0;
 			} else {
-				return sprintf( '<strong>Discount missing: $%s</strong>', wc_format_decimal( $diff * -1 ) );
+				return floatval( wc_format_decimal( $diff ) );
 			}
 		} elseif ( $diff > 0 ) {
 			if ( $diff < $precision ) {
-				return sprintf( '<strong>Correct discount given</strong>' );
+				return 0;
 			} else {
-				return sprintf( '<strong>Charged less: <strong>$%s</strong>', wc_format_decimal( $diff ) );
+				return floatval( wc_format_decimal( $diff ) );
 			}
 		} else {
-			return sprintf( '<strong>Correct discount given</strong>' );
+			return 0;
 		}
 	}
 

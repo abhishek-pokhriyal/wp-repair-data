@@ -19,7 +19,7 @@ final class WP_Repair_Data {
 	 *
 	 * @var string
 	 */
-	public $version = '0.0.11';
+	public $version = '1.0.0';
 
 	/**
 	 * The single instance of the class.
@@ -109,6 +109,7 @@ final class WP_Repair_Data {
 		include_once WPRD_ABSPATH . 'includes/class-wprd-data.php';
 		include_once WPRD_ABSPATH . 'includes/class-wprd-helpers.php';
 		include_once WPRD_ABSPATH . 'includes/class-wprd-repair.php';
+		include_once WPRD_ABSPATH . 'includes/class-wprd-refund-missing-discount.php';
 	}
 
 	/**

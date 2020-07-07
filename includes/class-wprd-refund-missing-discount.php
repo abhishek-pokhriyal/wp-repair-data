@@ -8,8 +8,26 @@
 defined( 'ABSPATH' ) || exit;
 
 class WPRD_Refund_Missing_Discount {
+	/**
+	 * The type of the date we will be using anywhere to record the
+	 * datetime while recording the event.
+	 *
+	 * @var string
+	 */
+	private static $date_type = 'mysql';
+
+	/**
+	 * Post meta key that is added to the renewal order right after it is created.
+	 *
+	 * Used to determine whether the missing discount has been added previously or not.
+	 *
+	 * @var string
+	 */
+	private static $meta_key = '_refunded_outstanding_discount';
+
 	public static function init() {
-		add_action( 'woocommerce_scheduled_subscription_payment', __CLASS__ . '::conditional_hooks', 1, -1 );
+		add_action( 'init', __CLASS__ . '::test_date', 5 );
+		add_action( 'woocommerce_scheduled_subscription_payment', __CLASS__ . '::conditional_hooks', -1 );
 	}
 
 	public static function conditional_hooks( $subscription_id ) {
@@ -22,19 +40,14 @@ class WPRD_Refund_Missing_Discount {
 
 	public static function adjust_missing_discount( $renewal_order, $subscription ) {
 		$missing_discount = self::get_missing_discount_amount( $subscription->get_id() );
-		$original_total   = $renewal_order->get_total();
+		wprd_order_add_discount( $renewal_order, 'subscribeandsave5-previous' , $missing_discount );
+		update_post_meta( $renewal_order->get_id(), self::$meta_key, current_time( self::$date_type, true ) );
 
-		/**
-		 * @todo: Confirm that the $original_total contains the 5% discount.
-		 */
-		$adjusted_total   = $original_total - $missing_discount;
-
-		$renewal_order->set_total( $adjusted_total );
-		$renewal_order->save();
+		return $renewal_order;
 	}
 
 	private static function get_missing_discount_amount( $order_id ) {
-		$order_discounts = require_once WPRD_ABSPATH . 'data/missing-discounts.php';
+		$order_discounts = require WPRD_ABSPATH . 'data/missing-discounts.php';
 
 		if ( array_key_exists( $order_id, $order_discounts ) ) {
 			return floatval( $order_discounts[ $order_id ] );
@@ -50,9 +63,10 @@ class WPRD_Refund_Missing_Discount {
 	 * @return bool
 	 */
 	private static function needs_refund( $order_id ) {
-		$needs_refund = array_keys( require_once WPRD_ABSPATH . 'data/missing-discounts.php' );
+		$needs_refund     = array_keys( require WPRD_ABSPATH . 'data/missing-discounts.php' );
+		$already_refunded = get_post_meta( $order_id, self::$meta_key, true );
 
-		return in_array( $order_id, $needs_refund );
+		return in_array( $order_id, $needs_refund ) && empty( $already_refunded );
 	}
 }
 

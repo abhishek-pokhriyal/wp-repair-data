@@ -19,7 +19,7 @@ final class WP_Repair_Data {
 	 *
 	 * @var string
 	 */
-	public $version = '1.0.1';
+	public $version = '1.0.2';
 
 	/**
 	 * The single instance of the class.
@@ -128,6 +128,7 @@ final class WP_Repair_Data {
 		add_action( 'wp_loaded', array( 'WPRD_Repair', 'show_subscriptions_needs_coupon' ), 20 );
 		add_action( 'wp_loaded', __CLASS__ . '::show_invalid_renewals', 20 );
 		add_action( 'wp_loaded', __CLASS__ . '::show_invalid_subs', 20 );
+		add_action( 'wp_loaded', array( 'WPRD_Repair', 'get_query_to_reset_coupon_used_by' ), 20 );
 	}
 
 	public static function show_invalid_subs() {

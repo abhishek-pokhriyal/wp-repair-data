@@ -207,4 +207,51 @@ class WPRD_Repair {
 			wp_die( '', 'Subscriptions and coupons' );
 		}
 	}
+
+	public static function get_query_to_reset_coupon_used_by() {
+		if ( isset( $_GET['wprd_repair_coupon_usage_query'] ) && $_GET['wprd_repair_coupon_usage_query'] ) {
+			if ( current_user_can( 'administrator' ) ) {
+				global $wpdb;
+
+				$coupon_id = $wpdb->get_var( sprintf( 'select * from %1$s where post_title = "%2$s"', $wpdb->posts, self::$coupon ) );
+
+				if ( ! $coupon_id ) {
+					return;
+				}
+
+				$meta_key           = '_used_by';
+				$used_by_query      = sprintf(
+					'SELECT * FROM %1$s WHERE post_id = %2$s and meta_key = "%3$s"',
+					$wpdb->postmeta,
+					absint( $coupon_id ),
+					$meta_key
+				);
+				$coupon_used_by     = $wpdb->get_results( $used_by_query, ARRAY_A );
+				$to_be_delete       = array();
+				$valid_coupon_usage = array();
+
+				foreach ( $coupon_used_by as $key => $used_by ) {
+					$user_id = $used_by['meta_value'];
+					$meta_id = $used_by['meta_id'];
+
+					if ( in_array( $user_id, $valid_coupon_usage ) ) {
+						$to_be_delete[] = $meta_id;
+					} else {
+						$valid_coupon_usage[ $meta_id ] = $user_id;
+					}
+				}
+
+				$query_to_delete = sprintf(
+					'SELECT * FROM %1$s WHERE post_id = %2$s AND meta_key = "%3$s" AND meta_id IN (%4$s)',
+					$wpdb->postmeta,
+					absint( $coupon_id ),
+					$meta_key,
+					implode( ',', $to_be_delete )
+				);
+
+				printf( '<code>%s</code>', $query_to_delete );
+				die;
+			}
+		}
+	}
 }

@@ -23,11 +23,23 @@ class WPRD_Refund_Missing_Discount {
 	 *
 	 * @var string
 	 */
-	private static $meta_key = '_refunded_outstanding_discount';
+	public static $meta_key = '_refunded_outstanding_discount';
 
 	public static function init() {
-		add_action( 'init', __CLASS__ . '::test_date', 5 );
-		add_action( 'woocommerce_scheduled_subscription_payment', __CLASS__ . '::conditional_hooks', -1 );
+		// add_action( 'woocommerce_scheduled_subscription_payment', __CLASS__ . '::conditional_hooks', -1 );
+		add_action( 'wp_loaded', __CLASS__ . '::show_refunding_plan' );
+	}
+
+	public static function show_refunding_plan() {
+		if ( isset( $_GET['show_refunding_plan'] ) && $_GET['show_refunding_plan'] ) {
+
+			if ( ! current_user_can( 'administrator' ) ) {
+				return;
+			}
+
+			include_once WPRD_ABSPATH . 'templates/refund-plan.php';
+			die;
+		}
 	}
 
 	public static function conditional_hooks( $subscription_id ) {
@@ -40,7 +52,7 @@ class WPRD_Refund_Missing_Discount {
 
 	public static function adjust_missing_discount( $renewal_order, $subscription ) {
 		$missing_discount = self::get_missing_discount_amount( $subscription->get_id() );
-		wprd_order_add_discount( $renewal_order, 'subscribeandsave5-previous' , $missing_discount );
+		wprd_order_add_discount( $renewal_order, 'subscribeandsave5-previous', $missing_discount );
 		update_post_meta( $renewal_order->get_id(), self::$meta_key, current_time( self::$date_type, true ) );
 
 		return $renewal_order;

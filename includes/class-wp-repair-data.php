@@ -109,6 +109,7 @@ final class WP_Repair_Data {
 		include_once WPRD_ABSPATH . 'includes/class-wprd-data.php';
 		include_once WPRD_ABSPATH . 'includes/class-wprd-helpers.php';
 		include_once WPRD_ABSPATH . 'includes/class-wprd-repair.php';
+		include_once WPRD_ABSPATH . 'includes/class-wprd-refund-missing-discount.php';
 	}
 
 	/**

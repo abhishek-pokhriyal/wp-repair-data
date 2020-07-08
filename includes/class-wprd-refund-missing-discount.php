@@ -26,7 +26,7 @@ class WPRD_Refund_Missing_Discount {
 	public static $meta_key = '_refunded_outstanding_discount';
 
 	public static function init() {
-		// add_action( 'woocommerce_scheduled_subscription_payment', __CLASS__ . '::conditional_hooks', -1 );
+		add_action( 'woocommerce_scheduled_subscription_payment', __CLASS__ . '::conditional_hooks', -1 );
 		add_action( 'wp_loaded', __CLASS__ . '::show_refunding_plan' );
 	}
 

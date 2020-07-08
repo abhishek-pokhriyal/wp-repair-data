@@ -243,7 +243,23 @@ class WPRD_Repair {
 					implode( ',', $to_be_delete )
 				);
 
-				printf( '<code>%s</code>', $query_to_delete );
+				printf( '<code>%s</code><br>', $query_to_delete );
+
+				$meta_to_be_deleted = $wpdb->get_results( $query_to_delete, ARRAY_A );
+				$user_ids           = array_map( 'absint', array_column( $meta_to_be_deleted, 'meta_value' ) );
+				$users_active_subs  = array();
+
+				foreach ( $user_ids as $user_id ) {
+					$user_subscriptions  = wcs_get_subscriptions( array(
+						'subscriptions_per_page' => -1,
+						'customer_id'            => $user_id,
+						'subscription_status'    => array( 'active' ),
+					) );
+
+					$users_active_subs[ $user_id ] = array_keys( $user_subscriptions );
+				}
+
+				var_dump( $users_active_subs );
 				die;
 			}
 		}

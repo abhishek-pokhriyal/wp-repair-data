@@ -51,9 +51,10 @@ class WPRD_Refund_Missing_Discount {
 	}
 
 	public static function adjust_missing_discount( $renewal_order, $subscription ) {
-		$missing_discount = self::get_missing_discount_amount( $subscription->get_id() );
+		$subscription_id  = $subscription->get_id();
+		$missing_discount = self::get_missing_discount_amount( $subscription_id );
 		wprd_order_add_discount( $renewal_order, 'subscribeandsave5-previous', $missing_discount );
-		update_post_meta( $renewal_order->get_id(), self::$meta_key, current_time( self::$date_type, true ) );
+		update_post_meta( $subscription_id, self::$meta_key, current_time( self::$date_type, true ) );
 
 		return $renewal_order;
 	}

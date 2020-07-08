@@ -7,11 +7,11 @@ class WPRD_Repair {
 	private static $coupon = 'subscribeandsave5';
 
 	private static $apply_coupon_to = array(
-		950508,
+		951234,
 	);
 
 	private static $order_customers = array(
-		                                950508 => 23337,
+		                                951234 => 23461,
 		                            );
 
 	/**

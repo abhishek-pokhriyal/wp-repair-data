@@ -19,7 +19,7 @@ final class WP_Repair_Data {
 	 *
 	 * @var string
 	 */
-	public $version = '1.0.5';
+	public $version = '1.0.7';
 
 	/**
 	 * The single instance of the class.

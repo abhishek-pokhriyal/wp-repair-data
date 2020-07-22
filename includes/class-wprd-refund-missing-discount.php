@@ -33,7 +33,7 @@ class WPRD_Refund_Missing_Discount {
 	public static function show_refunding_plan() {
 		if ( isset( $_GET['show_refunding_plan'] ) && $_GET['show_refunding_plan'] ) {
 
-			if ( ! current_user_can( 'administrator' ) ) {
+			if ( ! current_user_can( 'administrator' ) && ! current_user_can( 'shop_manager' ) ) {
 				return;
 			}
 

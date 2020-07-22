@@ -3,7 +3,7 @@
  * Plugin Name:       WP Repair Data
  * Plugin URI:        https://github.com/coloredcow-admin/megafitmeals/
  * Description:       Identify, repair, migrate, basically play with data in your WordPress site.
- * Version:           1.0.7
+ * Version:           1.0.8
  * Author:            ColoredCow
  * Author URI:        https://coloredcow.com/
  * License:           GPL v2 or later
